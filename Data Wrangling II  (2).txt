@@ -1,0 +1,81 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+# Step 1: Create Sample Dataset
+
+data = {
+    'Student_ID': [1, 2, 3, 4, 5, 6],
+    'Math_Score': [85, 90, np.nan, 40, 200, 95],       # Contains missing and an outlier
+    'English_Score': [78, 82, 75, 60, 58, None],       # Contains missing value
+    'Science_Score': [88, 92, 85, np.nan, 65, 100],    # Contains missing value
+    'Attendance_%': [95, 80, 85, 50, 110, 88]          # 110% is inconsistent
+}
+
+# Convert to DataFrame
+df = pd.DataFrame(data)
+print("Original Dataset:\n", df)
+
+
+# Step 2: Check and Handle Missing Values
+
+print("\nMissing Values:\n", df.isnull().sum())
+
+# Fill missing values with column means (safe way)
+df.fillna({
+    'Math_Score': df['Math_Score'].mean(),
+    'English_Score': df['English_Score'].mean(),
+    'Science_Score': df['Science_Score'].mean()
+}, inplace=True)
+
+print("\nDataset after filling missing values:\n", df)
+
+
+# Step 3: Handle Inconsistencies
+
+# Attendance cannot be more than 100
+df['Attendance_%'] = np.where(df['Attendance_%'] > 100, 100, df['Attendance_%'])
+
+print("\nDataset after fixing inconsistencies:\n", df)
+
+
+# Step 4: Detect and Handle Outliers using IQR
+
+def treat_outliers(column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+    df[column] = np.where(df[column] < lower, lower,
+                np.where(df[column] > upper, upper, df[column]))
+
+# Apply on numeric columns except Student_ID
+for col in ['Math_Score', 'English_Score', 'Science_Score', 'Attendance_%']:
+    treat_outliers(col)
+
+print("\nDataset after treating outliers:\n", df)
+
+ 
+# Step 5: Data Transformation (Log)
+
+# Log transformation to reduce skewness of Math_Score
+df['Log_Math_Score'] = np.log1p(df['Math_Score'])  # log1p handles log(0)
+
+print("\nMath Score vs Log Transformed:\n", df[['Math_Score', 'Log_Math_Score']])
+
+# Plot histograms before and after transformation
+plt.figure(figsize=(10, 4))
+plt.subplot(1, 2, 1)
+sns.histplot(df['Math_Score'], kde=True)
+plt.title('Before Transformation')
+
+plt.subplot(1, 2, 2)
+sns.histplot(df['Log_Math_Score'], kde=True)
+plt.title('After Log Transformation')
+
+plt.tight_layout()
+plt.show()

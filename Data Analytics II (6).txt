@@ -1,0 +1,109 @@
+# Step 1: Import necessary libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+from google.colab import files
+
+# Step 2: Create and save the 'Social_Network_Ads.csv' file
+data = {
+    'User ID': [15624510, 15810944, 15668575, 15603489, 15844312, 15769832, 15882963, 15688173, 15666525, 15721201,
+                15626334, 15705623, 15856693, 15774477, 15811501, 15779571, 15834358, 15643615, 15659675, 15715871],
+    'Gender': ['Male', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male',
+               'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Female'],
+    'Age': [19, 35, 26, 27, 19, 22, 49, 38, 27, 38, 35, 26, 49, 33, 47, 27, 28, 21, 31, 38],
+    'EstimatedSalary': [19000, 20000, 43000, 57000, 76000, 32000, 150000, 33000, 90000, 32000, 150000, 27000, 130000,
+                        36000, 130000, 50000, 120000, 29000, 82000, 65000],
+    'Purchased': [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Save DataFrame to CSV
+df.to_csv('Social_Network_Ads.csv', index=False)
+
+
+# Step 4: Load the dataset
+df = pd.read_csv('Social_Network_Ads.csv')
+print("\nFirst 5 rows of the dataset:")
+print(df.head())
+
+# Step 5: Select input features and target column
+X = df[['Age', 'EstimatedSalary']]  # Independent variables
+y = df['Purchased']                # Dependent variable
+
+# Step 6: Split data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+# Step 7: Train the logistic regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Step 8: Predict on the test set
+y_pred = model.predict(X_test)
+
+# Step 9: Compute evaluation metrics
+cm = confusion_matrix(y_test, y_pred)
+TP = cm[1, 1]
+TN = cm[0, 0]
+FP = cm[0, 1]
+FN = cm[1, 0]
+
+accuracy = accuracy_score(y_test, y_pred)
+error_rate = 1 - accuracy
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+
+# Step 10: Display results
+print("\nConfusion Matrix:")
+print(cm)
+print(f"\nTrue Positives (TP): {TP}")
+print(f"False Positives (FP): {FP}")
+print(f"True Negatives (TN): {TN}")
+print(f"False Negatives (FN): {FN}")
+
+print(f"\nAccuracy: {accuracy:.2f}")
+print(f"Error Rate: {error_rate:.2f}")
+print(f"Precision: {precision:.2f}")
+print(f"Recall: {recall:.2f}")
+
+
+=======================================================================================================================================================================
+                                                                                         OR
+=======================================================================================================================================================================
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+
+# Create and save dataset
+df = pd.DataFrame({
+    'Age': [19, 35, 26, 27, 19, 22, 49, 38, 27, 38, 35, 26, 49, 33, 47, 27, 28, 21, 31, 38],
+    'EstimatedSalary': [19000, 20000, 43000, 57000, 76000, 32000, 150000, 33000, 90000, 32000,
+                        150000, 27000, 130000, 36000, 130000, 50000, 120000, 29000, 82000, 65000],
+    'Purchased': [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0]
+})
+df.to_csv('Social_Network_Ads.csv', index=False)
+
+# Load data
+df = pd.read_csv('Social_Network_Ads.csv')
+X, y = df[['Age', 'EstimatedSalary']], df['Purchased']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+# Train model and predict
+model = LogisticRegression().fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+# Evaluation
+cm = confusion_matrix(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+
+# Results
+print("Confusion Matrix:\n", cm)
+print(f"TP: {cm[1,1]}, FP: {cm[0,1]}, TN: {cm[0,0]}, FN: {cm[1,0]}")
+print(f"Accuracy: {accuracy:.2f}, Error Rate: {1-accuracy:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}")

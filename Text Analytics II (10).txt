@@ -1,0 +1,26 @@
+import nltk
+
+# Ensure necessary resources are downloaded
+nltk.download('punkt')
+nltk.download('wordnet')
+
+# Sample text
+text = "Text analytics is the process of extracting meaning from text. It helps in understanding patterns and insights."
+print("Original Text:\n", text)
+
+# 1. Tokenization using regexp_tokenize (fix pattern to capture words and punctuation properly)
+from nltk.tokenize import regexp_tokenize
+tokens = regexp_tokenize(text, pattern=r'\w+|[^\w\s]+')
+print("\n1. Tokens:\n", tokens)
+
+# 2. Stemming
+from nltk.stem import PorterStemmer
+stemmer = PorterStemmer()
+stemmed = [stemmer.stem(word) for word in tokens]
+print("\n2. After Stemming:\n", stemmed)
+
+# 3. Lemmatization
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(word) for word in tokens]
+print("\n3. After Lemmatization:\n", lemmatized)

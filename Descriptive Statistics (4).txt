@@ -1,0 +1,30 @@
+# 1: Summary statistics grouped by a categorical variable
+import pandas as pd
+
+# Load Iris dataset
+df = pd.read_csv("https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv")
+
+# Grouped summary statistics for 'sepal_length' by 'species'
+grouped_stats = df.groupby('species')['sepal_length'].agg(['mean', 'median', 'min', 'max', 'std'])
+print("Summary statistics for 'sepal_length' grouped by 'species':\n")
+print(grouped_stats)
+
+# Create a list with sepal_length values for each species
+grouped_list = df.groupby('species')['sepal_length'].apply(list)
+print("\nList of sepal_length values for each species:\n")
+print(grouped_list)
+
+
+# 2: Statistical details for each species
+import numpy as np
+
+# Define function to show statistics for each species
+def species_stats(species_name):
+    species_data = df[df['species'] == species_name]
+    print(f"\nStatistical details for {species_name}:\n")
+    print(species_data.describe(percentiles=[.25, .5, .75]))
+
+# Display stats for all three species
+for species in df['species'].unique():
+    species_stats(species)
+

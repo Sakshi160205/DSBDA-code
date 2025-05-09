@@ -1,0 +1,43 @@
+!pip install nltk --quiet
+
+import nltk
+from nltk.tokenize import TreebankWordTokenizer
+from nltk.corpus import stopwords
+from nltk import pos_tag
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+
+# Fix: Download the updated resource versions
+nltk.download('averaged_perceptron_tagger_eng', force=True)
+nltk.download('stopwords', force=True)
+nltk.download('wordnet', force=True)
+nltk.download('omw-1.4', force=True)
+
+# Sample document
+text = "Text analytics is the process of extracting meaning from text. It helps in understanding patterns and insights."
+
+print("Original Text:\n", text)
+
+# 1. Tokenization using Treebank tokenizer
+tokenizer = TreebankWordTokenizer()
+tokens = tokenizer.tokenize(text)
+print("\n1. Tokens:\n", tokens)
+
+# 2. POS Tagging
+pos_tags = pos_tag(tokens)
+print("\n2. POS Tags:\n", pos_tags)
+
+# 3. Stop Words Removal
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+print("\n3. After Stop Words Removal:\n", filtered_tokens)
+
+# 4. Stemming
+stemmer = PorterStemmer()
+stemmed = [stemmer.stem(word) for word in filtered_tokens]
+print("\n4. After Stemming:\n", stemmed)
+
+# 5. Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+print("\n5. After Lemmatization:\n", lemmatized)

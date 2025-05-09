@@ -1,0 +1,44 @@
+# Step 1: Create the students_data.csv file (optional if you're generating it);
+import pandas as pd
+
+# Sample data dictionary
+data = {
+    "Name": ["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"],
+    "Age": [20, 21, 22, 20, 23, 21, 22, 24],
+    "Marks": [85, 78, None, 92, 67, 88, None, 95]
+}
+
+# Create DataFrame and save to CSV
+df = pd.DataFrame(data)
+df.to_csv("students_data.csv", index=False)
+
+
+
+# 1. Load the CSV file
+df = pd.read_csv("students_data.csv")
+
+# 2. Display the first 5 rows
+print("First 5 rows:")
+print(df.head())
+
+# 3. Get the number of rows and columns
+rows, cols = df.shape
+print(f"\nTotal Rows: {rows}, Total Columns: {cols}")
+
+# 4. List all column names
+print("\nColumn Names:")
+print(df.columns.tolist())
+
+# 5. Check for missing values
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+# 6. Replace missing values in "Marks" with average
+average_marks = df["Marks"].mean()
+df["Marks"] = df["Marks"].fillna(average_marks)
+print("\nMissing values in 'Marks' column replaced with average.")
+
+# 7. Select rows where Marks > 80
+high_scorers = df[df["Marks"] > 80]
+print("\nStudents with Marks > 80:")
+print(high_scorers)
